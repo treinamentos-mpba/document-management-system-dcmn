@@ -1,9 +1,9 @@
 const express = require('express');
 const config = require('./config');
-const { documentsRouter } = require('./routes/documents');
-const { DocumentRepository } = require('./repositories/documentRepository');
+const { documentsRouter } = require('./routes/documents.routes');
+const { DocumentRepository } = require('./repositories/documents.repository');
 const { LocalFileRepository } = require('./repositories/localFileRepository');
-const { DocumentService } = require('./services/documentService');
+const { DocumentService } = require('./services/documents.service');
 const { errorHandler } = require('./middleware/errorHandler');
 
 function createApp({

@@ -3,7 +3,7 @@ const path = require('node:path');
 const { randomUUID } = require('node:crypto');
 const express = require('express');
 const multer = require('multer');
-const { createDocumentsController } = require('../controllers/documentsController');
+const { createDocumentsController } = require('../controllers/documents.controller');
 
 function safeExtension(originalName) {
   return path.extname(originalName).toLowerCase().replace(/[^.a-z0-9]/g, '').slice(0, 16);

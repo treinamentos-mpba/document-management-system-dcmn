@@ -1,3 +1,8 @@
+// Controller do recurso documents.
+//
+// Trata a entrada/saída HTTP e a validação básica, delegando as regras de
+// negócio ao service. Erros são encaminhados ao middleware central.
+
 const { AppError } = require('../errors/appError');
 
 function createDocumentsController(documentService) {

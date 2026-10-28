@@ -1,3 +1,9 @@
+// Routes do recurso documents.
+//
+// Define os endpoints e delega ao controller. O upload usa multer com
+// diskStorage, gravando no filesystem local com nome físico gerado pelo
+// sistema — o nome original nunca compõe o caminho em disco.
+
 const fs = require('node:fs');
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
@@ -14,8 +20,8 @@ function documentsRouter({ documentService, storageDirectory, maxFileBytes }) {
   const controller = createDocumentsController(documentService);
   const storage = multer.diskStorage({
     destination(req, file, callback) {
-      // fs.mkdir com recursive retorna undefined quando o diretório já existe;
-      // o Multer precisa receber o caminho explicitamente no callback.
+      // fs.mkdir com recursive retorna undefined quando o diretório já
+      // existe; o Multer precisa receber o caminho explicitamente.
       fs.mkdir(storageDirectory, { recursive: true }, (error) => callback(error, storageDirectory));
     },
     filename(req, file, callback) {

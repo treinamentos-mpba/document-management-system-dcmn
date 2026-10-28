@@ -1,3 +1,9 @@
+// Service do recurso documents.
+//
+// Concentra as regras de negócio: validação do upload, associação ao owner,
+// geração de identificadores e localização do arquivo para download. Não
+// conhece Express nem detalhes de HTTP.
+
 const { randomUUID } = require('node:crypto');
 const { AppError } = require('../errors/appError');
 
@@ -7,16 +13,16 @@ function toPublicDocument(document) {
 }
 
 class DocumentService {
-  constructor(documentRepository, localFileRepository) {
+  constructor(documentRepository) {
     this.documentRepository = documentRepository;
-    this.localFileRepository = localFileRepository;
   }
 
   async create(file, owner) {
     const normalizedOwner = typeof owner === 'string' ? owner.trim() : '';
     if (!file || !normalizedOwner) {
       if (file) {
-        await this.localFileRepository.remove(file.filename);
+        // O Multer já gravou o arquivo: remove para não deixar órfãos.
+        await this.documentRepository.remove(file.filename);
       }
       throw new AppError(400, 'INVALID_UPLOAD', 'Envie um arquivo e informe um owner válido.');
     }
@@ -30,13 +36,7 @@ class DocumentService {
       storageName: file.filename,
     };
 
-    try {
-      this.documentRepository.create(document);
-    } catch (error) {
-      await this.localFileRepository.remove(file.filename);
-      throw new AppError(500, 'UPLOAD_FAILED', 'Não foi possível registrar o documento.');
-    }
-
+    this.documentRepository.create(document);
     return toPublicDocument(document);
   }
 
@@ -54,7 +54,7 @@ class DocumentService {
     }
 
     try {
-      const filePath = await this.localFileRepository.assertReadable(document.storageName);
+      const filePath = await this.documentRepository.assertReadable(document.storageName);
       return { document: toPublicDocument(document), filePath };
     } catch (error) {
       if (error.code === 'ENOENT') {

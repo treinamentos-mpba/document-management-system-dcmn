@@ -2,7 +2,6 @@ const express = require('express');
 const config = require('./config');
 const { documentsRouter } = require('./routes/documents.routes');
 const { DocumentRepository } = require('./repositories/documents.repository');
-const { LocalFileRepository } = require('./repositories/localFileRepository');
 const { DocumentService } = require('./services/documents.service');
 const { errorHandler } = require('./middleware/errorHandler');
 
@@ -11,9 +10,8 @@ function createApp({
   maxFileBytes = config.maxFileBytes,
 } = {}) {
   const app = express();
-  const documentRepository = new DocumentRepository();
-  const localFileRepository = new LocalFileRepository(storageDirectory);
-  const documentService = new DocumentService(documentRepository, localFileRepository);
+  const documentRepository = new DocumentRepository(storageDirectory);
+  const documentService = new DocumentService(documentRepository);
 
   app.use(express.json());
   app.get('/health', (req, res) => {

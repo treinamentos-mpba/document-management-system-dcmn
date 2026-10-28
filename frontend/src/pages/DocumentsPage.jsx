@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import UploadForm from '../components/UploadForm';
+import UploadComponent from '../components/UploadComponent';
 import DocumentList from '../components/DocumentList';
 import { listDocuments, uploadDocument } from '../services/documentsService';
 
@@ -58,7 +58,7 @@ export default function DocumentsPage() {
 
       <section style={{ marginBottom: '1.5rem' }}>
         <h2>Enviar documento</h2>
-        <UploadForm owner={owner} onUpload={handleUpload} />
+        <UploadComponent owner={owner} onUpload={handleUpload} />
       </section>
 
       {error && (
